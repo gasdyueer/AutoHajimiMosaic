@@ -1,6 +1,8 @@
 # AutoHajimiMosaic
 一款自动为你的色图进行哈基米马赛克处理的打码器😎
 还在因为家里请不到高人，做不出哈基米打码图而感到难过么？想不想让朋友一觉起来听到，"你的图都被我用哈基米祝福了，不用谢"？本项目帮你自动化生成哈基米打码图😎。
+
+[马上开玩Demo！](https://auto-hajimi-mosaic.streamlit.app/)
 ## 预览
 ![preview](./assets/preview.png)
 
@@ -33,8 +35,6 @@ pip install -r requirements.txt
 
 
 ## Todo&缺陷
-
-明天早上起来把webui部署一下，这样大伙可以直接玩。
 
 1. 目前[模型](https://github.com/Forenche/nsfw_detector_annotator/tree/release)对已经进行打码处理，存在遮挡物的部分识别能力弱，也存在缺判的情况。虽然存在[NudeNet](https://github.com/notAI-tech/NudeNet)一类的优秀模型，但是并不支持mask只支持box。后续可以支持更强的模型或者使用SAM+Grounded的方式使用自然语言nsfw描述来获得mask。
 > 感谢Forenche的nsfw_detector_annotator项目，提供了一个很好的基础模型。
