@@ -1,0 +1,10 @@
+[project]
+name = "nsfw-detector-annotator"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "objprint>=0.3.0",
+    "streamlit-drawable-canvas>=0.9.3",
+]

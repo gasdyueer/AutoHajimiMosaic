@@ -1,3 +1,9 @@
+# Ignore run time generated artifacts
+uploaded_media/
+feedbacks.json
+
+# Ignore pycache
+app/__pycache__/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
