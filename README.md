@@ -4,26 +4,9 @@
 ## 预览
 ![preview](./assets/preview.png)
 
-## 使用uv搭建环境
-[uv](https://docs.astral.sh/uv/getting-started/features/)是一个轻量级的Python虚拟环境管理器。
+## 环境
 ```bash
-# Install UV using pip
-pip install uv
-
-# Or using curl (recommended for Unix/macOS)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Or for Windows PowerShell
-irm https://astral.sh/uv/install.ps1 | iex
-```
-安装依赖：
-```bash
-uv venv
-# Activate the virtual environment
-# On Windows:
-.venv\Scripts\activate
-# Install the project with all dependencies
-uv pip install -e .
+pip install -r requirements.txt
 ```
 
 ## 哈基米使用方法
