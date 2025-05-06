@@ -2,7 +2,7 @@
 一款自动为你的色图进行哈基米马赛克处理的打码器😎
 还在因为家里请不到高人，做不出哈基米打码图而感到难过么？想不想让朋友一觉起来听到，"你的图都被我用哈基米祝福了，不用谢"？本项目帮你自动化生成哈基米打码图😎。
 
-[马上开玩Demo！](https://auto-hajimi-mosaic.streamlit.app/)
+[马上开玩Demo！](https://auto-hajimi-mosaic.streamlit.app/) [Streamlit Free部署太弱小了！如果访问不了用这个Demo](https://1b2c-129-170-197-100.ngrok-free.app/)
 ## 预览
 ![preview](./assets/preview.png)
 
