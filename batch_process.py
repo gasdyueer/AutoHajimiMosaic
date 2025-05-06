@@ -2,9 +2,9 @@ import argparse
 import os
 from pathlib import Path
 
-from PIL import Image
+from imagecodecs import imread, imwrite, imagefileext
 
-from util import apply_mask, classify_image, load_models, segment_image
+from util import apply_mask, classify_image, load_models, segment_image, to_rgb, to_rgba
 
 
 def process_images(input_folder, output_folder, pattern_image_path, head_image_path):
@@ -14,12 +14,13 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
     classification_model, segmentation_model = load_models()
     names = segmentation_model.names
 
-    pattern_image = Image.open(pattern_image_path)
-    head_image = Image.open(head_image_path).convert("RGBA")
+    pattern_image = to_rgba(imread(pattern_image_path))
+    head_image = to_rgba(imread(head_image_path))
 
+    support_ext = imagefileext()
     for file in input_folder.rglob("*"):
-        if file.suffix in ('.png', '.jpg', '.jpeg', '.bmp', '.webp'):
-            image = Image.open(file)
+        if file.suffix[1:] in support_ext:
+            image = to_rgb(imread(file))
 
             # Classify the image
             category = classify_image(image, classification_model)
@@ -38,7 +39,7 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
 
             mask_options = [names[class_id] for class_id in class_ids]
             selected_masks = mask_options  # Automatically select all masks
-
+            
             if selected_masks:
                 image_with_fill = image.copy()
                 for i, mask in enumerate(masks):
@@ -48,7 +49,8 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
                 # Save the processed image
                 output_path = output_folder / file.relative_to(input_folder)
                 output_path.parent.mkdir(parents=True, exist_ok=True)
-                image_with_fill.save(output_path, format="PNG")
+
+                imwrite(output_path, image_with_fill)
                 print(f"Processed and saved: {output_path}")
 
 if __name__ == "__main__":

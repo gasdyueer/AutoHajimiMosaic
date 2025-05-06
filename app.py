@@ -1,7 +1,7 @@
 import streamlit as st
-from PIL import Image
 import io
-from util import load_models, classify_image, segment_image, apply_mask
+from util import load_models, classify_image, segment_image, apply_mask, to_rgb, to_rgba
+from imagecodecs import imread, imagefileext, imwrite
 # import torch
 # torch.classes.__path__ = [] 
 
@@ -9,13 +9,14 @@ classification_model, segmentation_model = load_models()
 names = segmentation_model.names
 
 def main():
+    support_ext = imagefileext()
     st.title("🐱自动哈基米打码机")
     st.write("上传一张图片，哈基米会自动识别区域并且覆盖上去，你可以选择不遮挡一部分，然后就可以下载下来送给朋友了！[Source Code](https://github.com/frinkleko/AutoHajimiMosaic)")
 
-    uploaded_file = st.file_uploader("Upload an image...", type=["jpg", "jpeg", "png", "bmp", "webp"])
+    uploaded_file = st.file_uploader("Upload an image...", type=support_ext)
 
     if uploaded_file is not None:
-        image = Image.open(uploaded_file)
+        image = to_rgb(imread(uploaded_file.read()))
 
         # Classify the image
         category = classify_image(image, classification_model)
@@ -35,15 +36,15 @@ def main():
         mask_options = [names[class_id] for class_id in class_ids]
         selected_masks = st.multiselect("Select regions to mask", mask_options, default=mask_options)
 
-        pattern_image = Image.open("assets/pattern.png")
-        default_head_image = Image.open("assets/head.png").convert("RGBA")
+        pattern_image = imread("assets/pattern.png")
+        default_head_image = to_rgba(imread("assets/head.png"))
 
         # Option to upload a custom head image
         use_custom_head = st.checkbox("使用你自己的哈基米")
         if use_custom_head:
             custom_head_file = st.file_uploader("上传你的哈基米(推荐PNG with transparency)...", type=["png", "jpg", "jpeg"])
             if custom_head_file is not None:
-                head_image = Image.open(custom_head_file).convert("RGBA")
+                head_image = to_rgba(imread(custom_head_file.read()))
             else:
                 head_image = default_head_image
         else:
@@ -64,7 +65,7 @@ def main():
 
             # Convert image to bytes for download
             buf = io.BytesIO()
-            image_with_fill.save(buf, format="PNG")
+            imwrite(buf, image_with_fill, codec="png")
             byte_im = buf.getvalue()
 
             # Download button
