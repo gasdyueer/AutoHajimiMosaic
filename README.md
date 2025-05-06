@@ -1,8 +1,10 @@
 # AutoHajimiMosaic
+[![Hugging Face](https://img.shields.io/badge/Demo-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/Frinkleko/auto-hajimi-mosaic) [![Streamlit](https://img.shields.io/badge/Demo-Streamlit-blue)](https://auto-hajimi-mosaic.streamlit.app/)
+
 一款自动为你的色图进行哈基米马赛克处理的打码器😎
 还在因为家里请不到高人，做不出哈基米打码图而感到难过么？想不想让朋友一觉起来听到，"你的图都被我用哈基米祝福了，不用谢"？本项目帮你自动化生成哈基米打码图😎。
 
-[马上开玩Demo！](https://auto-hajimi-mosaic.streamlit.app/) [Streamlit Free部署太弱小了！如果访问不了用这个Demo](https://1b2c-129-170-197-100.ngrok-free.app/)
+[马上开玩Demo!](https://auto-hajimi-mosaic.streamlit.app/) / [玩Huggingface上的Demo!](https://huggingface.co/spaces/Frinkleko/auto-hajimi-mosaic) / [Streamlit Free部署太弱小了！如果访问不了用这个Demo](https://1b2c-129-170-197-100.ngrok-free.app/)
 ## 预览
 ![preview](./assets/preview.png)
 
@@ -15,6 +17,7 @@ pip install -r requirements.txt
 ```bash
 docker compose up --build
 ```
+还可以去[`huggingface space`](https://huggingface.co/spaces/Frinkleko/auto-hajimi-mosaic/) fork一下space开玩！
 
 ## 哈基米使用方法
 
@@ -25,6 +28,11 @@ docker compose up --build
    streamlit run app.py
    ```
 2. 在浏览器中打开应用，上传图片进行处理。
+
+也可以使用`gradio`
+```
+python gradio_app.py
+```
 
 ### 批量处理
 
