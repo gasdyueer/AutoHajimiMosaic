@@ -1,19 +1,25 @@
-import os
 import argparse
+import os
+from pathlib import Path
+
 from PIL import Image
-from util import load_models, classify_image, segment_image, apply_mask
+
+from util import apply_mask, classify_image, load_models, segment_image
+
 
 def process_images(input_folder, output_folder, pattern_image_path, head_image_path):
+    input_folder = Path(input_folder)
+    output_folder = Path(output_folder)
+
     classification_model, segmentation_model = load_models()
     names = segmentation_model.names
 
     pattern_image = Image.open(pattern_image_path)
     head_image = Image.open(head_image_path).convert("RGBA")
 
-    for filename in os.listdir(input_folder):
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.webp')):
-            image_path = os.path.join(input_folder, filename)
-            image = Image.open(image_path)
+    for file in input_folder.rglob("*"):
+        if file.suffix in ('.png', '.jpg', '.jpeg', '.bmp', '.webp'):
+            image = Image.open(file)
 
             # Classify the image
             category = classify_image(image, classification_model)
@@ -26,7 +32,7 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
                 class_ids = segmentation_results[0].boxes.cls.cpu().numpy().astype(int)
             except AttributeError:
                 if category_name in ['porn', 'hentai']:
-                    print(f"Warning: {filename} is classified as sensitive content, but no mask was found.")
+                    print(f"Warning: {file} is classified as sensitive content, but no mask was found.")
                 masks = []
                 class_ids = []
 
@@ -40,7 +46,8 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
                         image_with_fill = apply_mask(image_with_fill, mask, pattern_image, head_image)
 
                 # Save the processed image
-                output_path = os.path.join(output_folder, f"processed_{filename}")
+                output_path = output_folder / file.relative_to(input_folder)
+                output_path.parent.mkdir(parents=True, exist_ok=True)
                 image_with_fill.save(output_path, format="PNG")
                 print(f"Processed and saved: {output_path}")
 
