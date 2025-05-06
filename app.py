@@ -2,8 +2,8 @@ import streamlit as st
 from PIL import Image
 import io
 from util import load_models, classify_image, segment_image, apply_mask
-import torch
-torch.classes.__path__ = [] 
+# import torch
+# torch.classes.__path__ = [] 
 
 classification_model, segmentation_model = load_models()
 names = segmentation_model.names
