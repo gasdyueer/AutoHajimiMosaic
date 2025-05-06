@@ -1,12 +1,12 @@
 import gradio as gr
-from PIL import Image
-from util import load_models, classify_image, segment_image, apply_mask
+from imagecodecs import imread
+from util import load_models, classify_image, segment_image, apply_mask, to_rgb, to_rgba
 
 classification_model, segmentation_model = load_models()
 names = segmentation_model.names
 
 def process_image(uploaded_file, use_custom_head, custom_head_file=None):
-    image = Image.open(uploaded_file)
+    image = to_rgb(imread(uploaded_file))
 
     category = classify_image(image, classification_model)
     category_name = classification_model.names[category[0]]
@@ -23,11 +23,11 @@ def process_image(uploaded_file, use_custom_head, custom_head_file=None):
 
     mask_options = [names[class_id] for class_id in class_ids]
 
-    pattern_image = Image.open("assets/pattern.png")
-    default_head_image = Image.open("assets/head.png").convert("RGBA")
+    pattern_image = imread("assets/pattern.png")
+    default_head_image = to_rgba(imread("assets/head.png"))
 
     if use_custom_head and custom_head_file is not None:
-        head_image = custom_head_file.convert("RGBA")
+        head_image = to_rgba(custom_head_file)
     else:
         head_image = default_head_image
 
@@ -46,15 +46,15 @@ with gr.Blocks() as iface:
 
     uploaded_file = gr.File(label="上传图片")
     use_custom_head = gr.Checkbox(label="使用你自己的哈基米", value=False)
-    custom_head_file = gr.Image(type="pil", label="上传你的哈基米(推荐PNG with transparency)", visible=False)
+    custom_head_file = gr.Image(type="numpy", label="上传你的哈基米(推荐PNG with transparency)", visible=False)
 
     use_custom_head.change(toggle_custom_head, inputs=use_custom_head, outputs=custom_head_file)
 
     submit_btn = gr.Button("Submit")
     
     with gr.Row():
-        original_output = gr.Image(type="pil", label="原图")
-        mosaic_output = gr.Image(type="pil", label="哈基米图")
+        original_output = gr.Image(type="numpy", label="原图")
+        mosaic_output = gr.Image(type="numpy", label="哈基米图")
 
     submit_btn.click(
         process_image,
