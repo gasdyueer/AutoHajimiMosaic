@@ -41,20 +41,20 @@ def apply_mask(image, mask, pattern_image, head_image):
         min_y, min_x = mask_indices.min(axis=0)
         max_y, max_x = mask_indices.max(axis=0)
 
-        dst_points = np.float32([
+        dst_points = np.array([
             [min_x, min_y],
             [max_x, min_y],
             [max_x, max_y],
             [min_x, max_y]
-        ])
+        ], dtype=np.float32)
 
         head_width, head_height = head_image.size
-        src_points = np.float32([
+        src_points = np.array([
             [0, 0],
             [head_width, 0],
             [head_width, head_height],
             [0, head_height]
-        ])
+        ], dtype=np.float32)
 
         matrix = cv2.getPerspectiveTransform(src_points, dst_points)
         head_np = np.array(head_image)
