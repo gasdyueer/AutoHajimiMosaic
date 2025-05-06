@@ -7,8 +7,13 @@
 ![preview](./assets/preview.png)
 
 ## 环境
+用pip装个环境
 ```bash
 pip install -r requirements.txt
+```
+或者直接docker一键部署开玩WebUI
+```bash
+docker compose up --build
 ```
 
 ## 哈基米使用方法
