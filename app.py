@@ -14,6 +14,7 @@ def main():
     st.write("上传一张图片，哈基米会自动识别区域并且覆盖上去，你可以选择不遮挡一部分，然后就可以下载下来送给朋友了！[Source Code](https://github.com/frinkleko/AutoHajimiMosaic)")
 
     uploaded_file = st.file_uploader("Upload an image...", type=support_ext)
+    option = st.selectbox("请选择输出的格式", ("png", "jpeg"), index=0, help="输出格式，默认为 png")
 
     if uploaded_file is not None:
         image = to_rgb(imread(uploaded_file.read()))
@@ -65,15 +66,15 @@ def main():
 
             # Convert image to bytes for download
             buf = io.BytesIO()
-            imwrite(buf, image_with_fill, codec="png")
+            imwrite(buf, image_with_fill, codec=option)
             byte_im = buf.getvalue()
 
             # Download button
             st.download_button(
                 label="下载",
                 data=byte_im,
-                file_name="edited_image.png",
-                mime="image/png"
+                file_name=f"edited_image.{option}",
+                mime=f"image/{option}"
             )
 
 
