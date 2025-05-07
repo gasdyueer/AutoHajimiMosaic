@@ -2,8 +2,6 @@ import streamlit as st
 import io
 from util import load_models, classify_image, segment_image, apply_mask, to_rgb, to_rgba
 from imagecodecs import imread, imagefileext, imwrite
-# import torch
-# torch.classes.__path__ = [] 
 
 classification_model, segmentation_model = load_models()
 names = segmentation_model.names
@@ -13,9 +11,16 @@ def main():
     st.title("🐱自动哈基米打码机")
     st.write("上传一张图片，哈基米会自动识别区域并且覆盖上去，你可以选择不遮挡一部分，然后就可以下载下来送给朋友了！[Source Code](https://github.com/frinkleko/AutoHajimiMosaic)")
 
-    uploaded_file = st.file_uploader("Upload an image...", type=support_ext)
-    option = st.selectbox("请选择输出的格式", ("png", "jpeg"), index=0, help="输出格式，默认为 png")
+    uploaded_file = st.file_uploader("Upload an image", type=None)
 
+    # Check the file extension manually
+    if uploaded_file is not None:
+        file_extension = uploaded_file.name.split('.')[-1].lower()
+        if file_extension in support_ext:
+            pass
+        else:
+            st.error("Unsupported file format.")
+    
     if uploaded_file is not None:
         image = to_rgb(imread(uploaded_file.read()))
 
@@ -64,19 +69,22 @@ def main():
             with col2:
                 st.image(image_with_fill, caption="哈基米图", use_container_width=True)
 
-            # Convert image to bytes for download
-            buf = io.BytesIO()
-            imwrite(buf, image_with_fill, codec=option)
-            byte_im = buf.getvalue()
+            # Format selection and download button
+            col1, col2 = st.columns([1, 2])
+            with col1:
+                format_option = st.radio("选择下载格式", ("png", "jpeg"), index=0)
+            with col2:
+                # Convert image to bytes for download based on selected format
+                buf = io.BytesIO()
+                imwrite(buf, image_with_fill, codec=format_option)
+                byte_im = buf.getvalue()
 
-            # Download button
-            st.download_button(
-                label="下载",
-                data=byte_im,
-                file_name=f"edited_image.{option}",
-                mime=f"image/{option}"
-            )
-
+                st.download_button(
+                    label="下载",
+                    data=byte_im,
+                    file_name=f"edited_image.{format_option}",
+                    mime=f"image/{format_option}"
+                )
 
 if __name__ == "__main__":
     main()
