@@ -8,7 +8,7 @@ from imagecodecs import imread, imwrite, imagefileext
 from util import apply_mask, classify_image, load_models, segment_image, to_rgb, to_rgba
 
 
-def process_images(input_folder, output_folder, pattern_image_path, head_image_path):
+def process_images(input_folder, output_folder, pattern_image_path, head_image_path, recursive):
     input_folder = Path(input_folder)
     output_folder = Path(output_folder)
 
@@ -19,8 +19,12 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
     head_image = to_rgba(imread(head_image_path))
 
     support_ext = imagefileext()
-    for file in input_folder.rglob("*"):
-        if file.suffix[1:].lower() in support_ext:
+    
+    # Use rglob if recursive is True, else use glob
+    file_iterator = input_folder.rglob("*") if recursive else input_folder.glob("*")
+    
+    for file in file_iterator:
+        if file.is_file() and file.suffix[1:].lower() in support_ext:
             image = to_rgb(imread(file))
             image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             # Classify the image
@@ -60,8 +64,9 @@ if __name__ == "__main__":
     parser.add_argument("output_folder", type=str, help="Path to the output folder to save processed images.")
     parser.add_argument("--pattern_image", type=str, default="assets/pattern.png", help="Path to the pattern image.")
     parser.add_argument("--head_image", type=str, default="assets/head.png", help="Path to the head image.")
+    parser.add_argument("--recursive", action="store_true", help="Include subfolders in processing.")
 
     args = parser.parse_args()
 
     os.makedirs(args.output_folder, exist_ok=True)
-    process_images(args.input_folder, args.output_folder, args.pattern_image, args.head_image)
+    process_images(args.input_folder, args.output_folder, args.pattern_image, args.head_image, args.recursive)
