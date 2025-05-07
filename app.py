@@ -1,7 +1,10 @@
-import streamlit as st
 import io
-from util import load_models, classify_image, segment_image, apply_mask, to_rgb, to_rgba
-from imagecodecs import imread, imagefileext, imwrite
+
+import cv2
+import streamlit as st
+from imagecodecs import imagefileext, imread, imwrite
+
+from util import apply_mask, classify_image, load_models, segment_image, to_rgb, to_rgba
 
 classification_model, segmentation_model = load_models()
 names = segmentation_model.names
@@ -23,13 +26,14 @@ def main():
     
     if uploaded_file is not None:
         image = to_rgb(imread(uploaded_file.read()))
+        image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         # Classify the image
-        category = classify_image(image, classification_model)
+        category = classify_image(image_bgr, classification_model)
         category_name = classification_model.names[category[0]]
 
         # Segment the image
-        segmentation_results = segment_image(image, segmentation_model)
+        segmentation_results = segment_image(image_bgr, segmentation_model)
         try:
             masks = segmentation_results[0].masks.data.cpu().numpy()
             class_ids = segmentation_results[0].boxes.cls.cpu().numpy().astype(int)

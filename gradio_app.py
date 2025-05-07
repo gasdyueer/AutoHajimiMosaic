@@ -1,17 +1,20 @@
+import cv2
 import gradio as gr
 from imagecodecs import imread
-from util import load_models, classify_image, segment_image, apply_mask, to_rgb, to_rgba
+
+from util import apply_mask, classify_image, load_models, segment_image, to_rgb, to_rgba
 
 classification_model, segmentation_model = load_models()
 names = segmentation_model.names
 
 def process_image(uploaded_file, use_custom_head, custom_head_file=None):
     image = to_rgb(imread(uploaded_file))
+    image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    category = classify_image(image, classification_model)
+    category = classify_image(image_bgr, classification_model)
     category_name = classification_model.names[category[0]]
 
-    segmentation_results = segment_image(image, segmentation_model)
+    segmentation_results = segment_image(image_bgr, segmentation_model)
     try:
         masks = segmentation_results[0].masks.data.cpu().numpy()
         class_ids = segmentation_results[0].boxes.cls.cpu().numpy().astype(int)

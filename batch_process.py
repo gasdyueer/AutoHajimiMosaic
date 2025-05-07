@@ -2,6 +2,7 @@ import argparse
 import os
 from pathlib import Path
 
+import cv2
 from imagecodecs import imread, imwrite, imagefileext
 
 from util import apply_mask, classify_image, load_models, segment_image, to_rgb, to_rgba
@@ -21,13 +22,13 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
     for file in input_folder.rglob("*"):
         if file.suffix[1:] in support_ext:
             image = to_rgb(imread(file))
-
+            image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             # Classify the image
-            category = classify_image(image, classification_model)
+            category = classify_image(image_bgr, classification_model)
             category_name = classification_model.names[category[0]]
 
             # Segment the image
-            segmentation_results = segment_image(image, segmentation_model)
+            segmentation_results = segment_image(image_bgr, segmentation_model)
             try:
                 masks = segmentation_results[0].masks.data.cpu().numpy()
                 class_ids = segmentation_results[0].boxes.cls.cpu().numpy().astype(int)
