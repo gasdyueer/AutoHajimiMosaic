@@ -20,7 +20,7 @@ def process_images(input_folder, output_folder, pattern_image_path, head_image_p
 
     support_ext = imagefileext()
     for file in input_folder.rglob("*"):
-        if file.suffix[1:] in support_ext:
+        if file.suffix[1:].lower() in support_ext:
             image = to_rgb(imread(file))
             image_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             # Classify the image
