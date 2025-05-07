@@ -4,7 +4,7 @@
 一款自动为你的色图进行哈基米马赛克处理的打码器😎
 还在因为家里请不到高人，做不出哈基米打码图而感到难过么？想不想让朋友一觉起来听到，"你的图都被我用哈基米祝福了，不用谢"？本项目帮你自动化生成哈基米打码图😎。
 
-[马上开玩Demo!](https://auto-hajimi-mosaic.streamlit.app/) / [玩Huggingface上的Demo!](https://huggingface.co/spaces/Frinkleko/auto-hajimi-mosaic) / [Streamlit Free部署太弱小了！如果访问不了用这个Demo](https://1b2c-129-170-197-100.ngrok-free.app/)
+[马上开玩Demo!](https://auto-hajimi-mosaic.streamlit.app/) / [玩Huggingface上的Demo!](https://huggingface.co/spaces/Frinkleko/auto-hajimi-mosaic)
 ## 预览
 ![preview](./assets/preview.png)
 
@@ -38,13 +38,16 @@ python gradio_app.py
 
 1. 确保你的输入图像放在一个文件夹中。
 2. 运行批量处理脚本：
+
    ```bash
-   python batch_process.py path/to/input/folder path/to/output/folder --pattern_image path/to/pattern.png --head_image path/to/head.png
+   python batch_process.py path/to/input/folder path/to/output/folder --pattern_image path/to/pattern.png --head_image path/to/head.png [--recursive]
    ```
+
    - `path/to/input/folder`: 输入图像文件夹路径。
    - `path/to/output/folder`: 输出处理后图像的文件夹路径。
    - `--pattern_image`: （可选）填充图案图片路径。
    - `--head_image`: （可选）覆盖头部图片路径。
+   - `--recursive`: （可选）包含子文件夹中的图像。
 
 
 ## Todo&缺陷
