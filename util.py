@@ -3,17 +3,17 @@ from PIL import Image
 import numpy as np
 import cv2
 
-def load_models():
+def load_models() -> tuple[YOLO, YOLO]:
     classification_model = YOLO('models/classification_model.pt')
     segmentation_model = YOLO('models/segmentation_model.pt')
     return classification_model, segmentation_model
 
-def classify_image(image, classification_model):
+def classify_image(image, classification_model: YOLO):
     results = classification_model(image, verbose=True)
     category = results[0].probs.top5
     return category
 
-def segment_image(image, segmentation_model):
+def segment_image(image, segmentation_model: YOLO):
     results = segmentation_model(image, agnostic_nms=True, retina_masks=True, verbose=True)
     return results
 
@@ -28,7 +28,7 @@ def tile_pattern(image_size, pattern_image):
 
     return Image.fromarray(tiled_pattern[:image_size[1], :image_size[0]])
 
-def apply_mask(image: np.ndarray, mask: np.ndarray, pattern_image: np.ndarray, head_image: np.ndarray):
+def apply_mask(image: np.ndarray, mask: np.ndarray, pattern_image: np.ndarray, head_image: np.ndarray) -> np.ndarray:
     mask_indices = np.argwhere(mask > 0)
     if mask_indices.size > 0:
         min_y, min_x = mask_indices.min(axis=0)
