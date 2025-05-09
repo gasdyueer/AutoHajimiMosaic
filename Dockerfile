@@ -20,6 +20,11 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY . /app
 WORKDIR /app
-EXPOSE 8501
-ENTRYPOINT ["streamlit", "run", "app.py"]
-CMD ["--server.enableCORS=false", "--server.enableXsrfProtection=false", "--server.port=8501"]
+
+# Expose ports for API server
+EXPOSE 8501 8000
+
+# Use an environment variable to switch between modes
+ENV APP_MODE=webui
+ENTRYPOINT ["bash", "-c"]
+CMD ["if [ \"$APP_MODE\" = \"api\" ]; then uvicorn api_server:app --host 0.0.0.0 --port 8000; else streamlit run app.py --server.enableCORS=false --server.enableXsrfProtection=false --server.port=8501; fi"]
