@@ -1,9 +1,15 @@
 name: hajimi
-
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  webui:
+    build: .
+    environment:
+      - APP_MODE=webui
     ports:
       - "8501:8501"
+
+  api:
+    build: .
+    environment:
+      - APP_MODE=api
+    ports:
+      - "8000:8000"
