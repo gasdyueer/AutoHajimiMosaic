@@ -30,8 +30,10 @@
    curl -X POST "http://localhost:8000/process" \
       -H "Content-Type: multipart/form-data" \
       -F "file=@path/to/your/image.jpg" \
-      -F "pattern_image=@path/to/pattern.png" \  # 可选
-      -F "head_image=@path/to/head.png"          # 可选
+      # 可选
+      -F "pattern_image=@path/to/pattern.png" \
+      # 可选
+      -F "head_image=@path/to/head.png
    ```
 
 ## 本地部署

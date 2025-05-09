@@ -32,12 +32,11 @@ async def process_images(files: list[UploadFile], pattern_image: UploadFile = No
         class_ids = segmentation_results[0].boxes.cls.cpu().numpy().astype(int) if hasattr(segmentation_results[0], 'boxes') else []
 
         mask_options = [names[class_id] for class_id in class_ids]
-        selected_masks = mask_options
 
-        if selected_masks:
+        if mask_options:
             image_with_fill = image.copy()
             for i, mask in enumerate(masks):
-                if mask_options[i] in selected_masks:
+                if mask_options[i] in mask_options:
                     image_with_fill = apply_mask(image_with_fill, mask, pattern_image_data, head_image_data)
 
             processed_images.append(imwrite(image_with_fill))
