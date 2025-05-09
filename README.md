@@ -28,12 +28,13 @@
    示例请求:
    ```bash
    curl -X POST "http://localhost:8000/process" \
-      -H "Content-Type: multipart/form-data" \
       -F "file=@path/to/your/image.jpg" \
       # 可选
       -F "pattern_image=@path/to/pattern.png" \
       # 可选
       -F "head_image=@path/to/head.png
+      # 可选 (默认是png)
+      -F "output_format=jpg"
    ```
 
 ## 本地部署
