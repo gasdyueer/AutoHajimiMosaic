@@ -32,7 +32,7 @@
       # 可选
       -F "pattern_image=@path/to/pattern.png" \
       # 可选
-      -F "head_image=@path/to/head.png
+      -F "head_image=@path/to/head.png"
       # 可选 (默认是png)
       -F "output_format=jpg"
    ```
