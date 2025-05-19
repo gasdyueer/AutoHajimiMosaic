@@ -42,12 +42,24 @@ def process_image(uploaded_file, use_custom_head, custom_head_file=None):
                 image_with_fill, mask, pattern_image, head_image
             )
 
-    return image, image_with_fill
+    # 返回原图、自动处理后的哈基米图，并将哈基米图传递给手动编辑器
+    return image, image_with_fill, image_with_fill
 
 
 def toggle_custom_head(use_custom_head):
     return gr.update(visible=use_custom_head)
 
+# 处理手动编辑器的输出
+def apply_manual_edit(editor_value):
+    """
+    处理手动编辑器的输出。
+    ImageEditor 返回一个字典，'composite' 键包含最终编辑后的图片。
+    """
+    if editor_value is None:
+        return None
+    # 从 ImageEditor 的输出字典中获取最终编辑后的图片
+    edited_image = editor_value.get('composite')
+    return edited_image
 
 with gr.Blocks() as iface:
     gr.Markdown(
@@ -70,10 +82,25 @@ with gr.Blocks() as iface:
         original_output = gr.Image(type="numpy", label="原图")
         mosaic_output = gr.Image(type="numpy", label="哈基米图")
 
+    # 添加手动图片编辑器组件
+    manual_editor = gr.ImageEditor(type="numpy", label="手动修改图片")
+    # 添加手动修改按钮
+    manual_edit_btn = gr.Button("手动修改")
+    # 添加手动修改结果输出组件
+    manual_edit_output = gr.Image(type="numpy", label="手动修改结果")
+
+    # 提交按钮点击事件：处理图片并更新原图、哈基米图和手动编辑器
     submit_btn.click(
         process_image,
         inputs=[uploaded_file, use_custom_head, custom_head_file],
-        outputs=[original_output, mosaic_output],
+        outputs=[original_output, mosaic_output, manual_editor],
+    )
+
+    # 手动修改按钮点击事件：应用手动编辑并更新手动修改结果
+    manual_edit_btn.click(
+        apply_manual_edit,
+        inputs=[manual_editor],
+        outputs=[manual_edit_output]
     )
 
 iface.launch(share=True)
